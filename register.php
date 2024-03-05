@@ -18,7 +18,12 @@ if(isset($_POST["submitButton"])){
     $password = FormSanitizer::sanitizeFormPassword($_POST["password"]);
     $password2 = FormSanitizer::sanitizeFormPassword($_POST["password2"]);
 
-    $account->register($firstName, $lastName, $username, $email, $email2,$password,$password2);
+    $success = $account->register($firstName, $lastName, $username, $email, $email2,$password,$password2);
+
+    if($success){
+        // Store session
+        header("Location: index.php");
+    }
 }
 ?>
 
@@ -71,7 +76,7 @@ if(isset($_POST["submitButton"])){
         <input type="email" name="email2" placeholder="Confirm email" required>
 
         <?php echo $account->getError(Constants::$passwordsDontMatch); ?>
-        <?php echo $account->getError(Constants::$passwordLength); ?>
+        <?php // echo $account->getError(Constants::$passwordLength); ?>
 
         <input type="password" name="password" placeholder="Password" required>
         <input type="password" name="password2" placeholder="Confirm Password" required>

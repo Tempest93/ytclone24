@@ -10,8 +10,49 @@ class Account {
 
     public function register($fn, $ln, $un, $em, $em2, $pw, $pw2){
         $this->validateFirstName($fn);
-        $this->validateFirstName($ln);
+        $this->validateLastName($ln); 
         $this->validateUsername($un);
+        $this->validateEmails($em, $em2);
+        $this->validatePasswords($pw, $pw2);
+
+        if(empty($this->errorArray)){
+            return $this->insertUserDetails($fn, $ln, $un, $em, $pw); 
+        }
+
+        return false;
+    }
+
+    public function login($un, $pw){
+        $pw = hash("sha512", $pw);
+        $query = $this->con->prepare("SELECT * FROM users WHERE username = :un AND password = :pw");
+        $query->bindValue(":un", $un);
+        $query->bindValue(":pw", $pw); 
+
+        $query->execute(); 
+
+        if($query->rowCount() == 1){
+            return true;
+        }
+
+        array_push($this->errorArray, Constants::$loginFailed);
+        return false;
+    }
+
+
+    private function insertUserDetails($fn, $ln, $un, $em, $pw){ 
+
+        $pw = hash("sha512", $pw);
+
+        $query = $this->con->prepare("INSERT INTO users (firstName, lastName, username, email, password)
+                                        VALUES (:fn, :ln, :un, :em, :pw)"); 
+        $query->bindValue(":fn", $fn);
+        $query->bindValue(":ln", $ln); 
+        $query->bindValue(":un", $un); 
+        $query->bindValue(":em", $em); 
+        $query->bindValue(":pw", $pw);      
+
+        return $query->execute();
+
     }
 
     private function validateFirstName($fn){
@@ -63,13 +104,13 @@ class Account {
 
     private function validatePasswords ($pw, $pw2) {
         if ($pw != $pw2) {
-        array_push($this->errorArray, Constants::$passwordsDontMatch);
-        return;
+            array_push($this->errorArray, Constants::$passwordsDontMatch);
+            return;
         }
-        if(strlen($pw) < 5 || strlen($pw) > 25) {
-        array_push($this->errorArray, Constants::$passwordLength);
-        }
-        }
+        // if(strlen($pw) < 5 || strlen($pw) > 25) {
+        // array_push($this->errorArray, Constants::$passwordLength);
+        // }
+    }
 
     public function getError($error){
         if(in_array($error, $this->errorArray)){

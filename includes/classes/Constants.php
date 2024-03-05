@@ -1,4 +1,4 @@
-<?php
+  <?php
 
 class Constants {
 
@@ -12,4 +12,5 @@ class Constants {
     public static $emailTaken = "Email Taken ";
     public static $passwordsDontMatch = "Password dosent match";
     public static $passwordLength = "Your password must be between 5- 25 characters";
+    public static $loginFailed = "Your username or password is incorrect";
 }
