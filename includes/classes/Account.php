@@ -5,18 +5,13 @@ class Account {
     private $errorArray = array();
 
     public function __construct($con){
-        if(!($con instanceof PDO)){
-            throw new Exception("Invalid PDO Connection.");
-        }
         $this->con = $con;
     }
 
     public function register($fn, $ln, $un, $em, $em2, $pw, $pw2){
         $this->validateFirstName($fn);
-        $this->validateLastName($ln);
+        $this->validateFirstName($ln);
         $this->validateUsername($un);
-        $this->validateEmails($em, $em2);
-        $this->validatePasswords($pw, $pw2);
     }
 
     private function validateFirstName($fn){
@@ -68,15 +63,18 @@ class Account {
 
     private function validatePasswords ($pw, $pw2) {
         if ($pw != $pw2) {
-            array_push($this->errorArray, Constants::$passwordsDontMatch);
+        array_push($this->errorArray, Constants::$passwordsDontMatch);
+        return;
         }
         if(strlen($pw) < 5 || strlen($pw) > 25) {
-            array_push($this->errorArray, Constants::$passwordLength);
+        array_push($this->errorArray, Constants::$passwordLength);
         }
-    }
+        }
 
-    public function getErrors(){
-        return $this->errorArray;
+    public function getError($error){
+        if(in_array($error, $this->errorArray)){
+            return $error; 
+        }
     }
 
 }

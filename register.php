@@ -4,7 +4,7 @@ require_once("includes/classes/FormSanitizer.php");
 require_once("includes/classes/Constants.php");
 require_once("includes/classes/Account.php");
 
-$account- new Account($con);
+$account= new Account($con);
 
 if(isset($_POST["submitButton"])){
     // stop user from entering using html tags 
@@ -64,7 +64,7 @@ if(isset($_POST["submitButton"])){
 
         
          <?php echo $account->getError(Constants::$emailInvalid); ?>
-         <?php echo $account->getError(Constants::$email); ?>
+         <?php echo $account->getError(Constants::$emailTaken); ?>
         <input type="email" name="email" placeholder="Email" required>
 
         <?php echo $account->getError(Constants::$emailsDontMatch); ?>
