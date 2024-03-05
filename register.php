@@ -1,9 +1,19 @@
 <?php
+require_once("includes/classes/FormSanitizer.php");
 if(isset($_POST["submitButton"])){
-    echo "Form was submitted";
+    // stop user from entering using html tags 
+    // auto convert 1st letter into upper 
+    // remove spaces
+    $firstName = FormSanitizer::sanitizeFormString($_POST["firstName"]);
+    $lastName = FormSanitizer::sanitizeFormString($_POST["lastName"]);
+    $username = FormSanitizer::sanitizeFormUsername($_POST["username"]);
+    $email = FormSanitizer::sanitizeFormEmail($_POST["email"]);
+    $email2 = FormSanitizer::sanitizeFormEmail($_POST["email2"]);
+    $password = FormSanitizer::sanitizeFormPassword($_POST["password"]);
+    $password2 = FormSanitizer::sanitizeFormPassword($_POST["password2"]);
 }
-
 ?>
+
 
 
 <!DOCTYPE html>
@@ -13,7 +23,7 @@ if(isset($_POST["submitButton"])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CloneTube</title>
     <!-- Dont forget to add favicon -->
-    <link rel="stylesheet" type="text/css" href="assets/style/style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
     
@@ -30,8 +40,8 @@ if(isset($_POST["submitButton"])){
 
 
 
-        <form method="POST">
-        <input type="text" name="firstName" placeholder="First Name" required>
+    <form method="POST">
+         <input type="text" name="firstName" placeholder="First Name" required>
 
         <input type="text" name="lastName" placeholder="Last Name" required>
 
@@ -48,10 +58,12 @@ if(isset($_POST["submitButton"])){
         <input type="submit" name="submitButton" value="SUBMIT">
 
         
-        </form>
+    </form>
 
-         </div>
+    <a href="login.php" class="signInMessage">Already have an account? Sign in here!</a>
+
     </div>
+ </div>
 
 </body>
 </html>
