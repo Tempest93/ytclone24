@@ -40,32 +40,23 @@ class Account {
 
         return false;
     }
+
     public function login($un, $pw) {
-        // Check if the password is "1234"
-       
-    
-        // Hash the provided password
-        $hashedPw = hash("sha512", $pw);
-        
-        // Prepare and execute the SQL query
-        $query = $this->con->prepare("SELECT * FROM users WHERE username=:un");
+        $pw = hash("sha512", $pw);
+
+        $query = $this->con->prepare("SELECT * FROM users WHERE username=:un AND password=:pw");
         $query->bindValue(":un", $un);
+        $query->bindValue(":pw", $pw);
+
         $query->execute();
-    
-        // Fetch the user row from the database
-        $user = $query->fetch(PDO::FETCH_ASSOC);
-    
-        // Verify if the user exists and if the hashed password matches
-        if($user && hash_equals($user['password'], $hashedPw)) {
+
+        if($query->rowCount() == 1) {
             return true;
         }
-    
-        // If no matching user or password found, add login failed error message
+
         array_push($this->errorArray, Constants::$loginFailed);
         return false;
     }
-    
-    
 
     private function insertUserDetails($fn, $ln, $un, $em, $pw) {
         
