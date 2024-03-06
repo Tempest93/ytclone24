@@ -1,29 +1,33 @@
-<!-- login page -->
 <?php
-     require_once("includes/config.php");
-     require_once("includes/classes/FormSanitizer.php");
-     require_once("includes/classes/Account.php");
-     require_once("includes/classes/Constants.php");
-     $account = new Account($con);
+require_once("includes/config.php");
+require_once("includes/classes/FormSanitizer.php");
+require_once("includes/classes/Account.php");
+require_once("includes/classes/Constants.php");
 
-    if(isset($_POST["submitButton"])) {
-        $username = FormSanitizer::sanitizeFormUsername($_POST["username"]);
-        $password = FormSanitizer::sanitizeFormPassword($_POST["password"]);
-         
-         $success = $account->login($username, $password);
-         
-         if($success) {
-             $_SESSION["userLoggedIn"] = $username;
-             header("Location: index.php"); 
-             exit;
-         }
-    }
+$account = new Account($con);
 
-    function getInputValue($name) {
-        if(isset($_POST[$name])) {
-            echo $_POST[$name];
-        }
+if(isset($_POST["submitButton"])) {
+    $username = FormSanitizer::sanitizeFormUsername($_POST["username"]);
+    $password = FormSanitizer::sanitizeFormPassword($_POST["password"]);
+
+    // Call the login method
+    $success = $account->login($username, $password);
+
+    if($success==true) {
+        $_SESSION["userLoggedIn"] = $username;
+        header("Location: index.php");
+        exit;
     }
+    else{
+        echo "dead";
+    }
+}
+
+function getInputValue($name) {
+    if(isset($_POST[$name])) {
+        echo $_POST[$name];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,26 +38,21 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <div class="signInContainer">
-
-        <div class="column">
-            <div class="header">
-                <img src="assets/images/logo.png" title="logo" alt="Site logo">
-                <h3>Sign In</h3>
-                <span>to continue to CloneTube</span>
-            </div>
-            <form method="post" action="">
-
-                <?php echo $account->getError(Constants::$loginFailed); ?>
-                <input type="text" name="username" id="username" placeholder="User Name" value="<?php getInputValue("username")?>" required>
-                
-                <input type="password" name="password" id="password" placeholder="Password" required>
-                
-                <input type="submit" name="submitButton" id="submitButton" value="SUBMIT">
-          
-            </form>
-            <a href="register.php" class="signInMessage">Need an account? Sign up here!</a>
+<div class="signInContainer">
+    <div class="column">
+        <div class="header">
+            <img src="assets/images/logo.png" title="logo" alt="Site logo">
+            <h3>Sign In</h3>
+            <span>to continue to CloneTube</span>
         </div>
+        <form method="post" action="">
+            <?php echo $account->getError(Constants::$loginFailed); ?>
+            <input type="text" name="username" id="username" placeholder="User Name" value="<?php getInputValue("username")?>" required>
+            <input type="password" name="password" id="password" placeholder="Password" required>
+            <input type="submit" name="submitButton" id="submitButton" value="SUBMIT">
+        </form>
+        <a href="register.php" class="signInMessage">Need an account? Sign up here!</a>
     </div>
+</div>
 </body>
 </html>
