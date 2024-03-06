@@ -14,7 +14,7 @@ class SeasonProvider {
             return;
         }
 
-        $seasonsHtml = ""; //seaseon numberまわす
+        $seasonsHtml = ""; 
         foreach($seasons as $season) {
             $seasonNumber = $season->getSeasonNumber();
 
